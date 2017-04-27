@@ -1,1 +1,1 @@
-# TODO: Add rules to exclude your SDK classes from proguard in implementing apps
+-keep public class org.apache.commons.codec.binary.Base64 { public *; }

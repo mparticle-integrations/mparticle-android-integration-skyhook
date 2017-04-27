@@ -1,2 +1,20 @@
-<!-- Change 'example' below to your company name, and delete this comment. -->
-<manifest package="com.mparticle.kits.example"/>
+<manifest package="com.mparticle.kits.skyhook" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application>
+        <service
+            android:name="com.skyhookwireless.accelerator.AcceleratorService"
+            android:exported="false"/>
+        <service
+            android:name="com.mparticle.kits.SkyhookIntentService"
+            android:exported="false"/>
+    </application>
+
+</manifest>
