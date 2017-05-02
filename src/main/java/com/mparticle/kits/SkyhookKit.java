@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.mparticle.internal.MPUtility;
@@ -34,8 +35,12 @@ public class SkyhookKit
     }
 
     @Override
-    protected List<ReportingMessage> onKitCreate(Map<String, String> settings, Context context) {
-        _client = new AcceleratorClient(context, settings.get(API_KEY), this, this);
+    protected List<ReportingMessage> onKitCreate(final Map<String, String> settings,
+                                                 final Context context) {
+        final String apiKey = settings.get(API_KEY);
+        new SkyhookPreferences(context).setApiKey(apiKey);
+
+        _client = new AcceleratorClient(context, apiKey, this, this);
         SkyhookLog.i("Accelerator SDK v" + _client.getVersion());
         initialize();
         return null;
@@ -49,7 +54,7 @@ public class SkyhookKit
     }
 
     @Override
-    public List<ReportingMessage> setOptOut(boolean optOutStatus) {
+    public List<ReportingMessage> setOptOut(final boolean optOutStatus) {
         return null;
     }
 
