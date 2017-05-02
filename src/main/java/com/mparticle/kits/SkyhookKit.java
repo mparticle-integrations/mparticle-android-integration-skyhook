@@ -1,9 +1,13 @@
 package com.mparticle.kits;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
+import com.mparticle.internal.MPUtility;
 import com.skyhookwireless.accelerator.AcceleratorClient;
 import com.skyhookwireless.accelerator.AcceleratorStatusCodes;
 
@@ -12,7 +16,8 @@ import java.util.Map;
 
 public class SkyhookKit
     extends KitIntegration
-    implements AcceleratorClient.ConnectionCallbacks,
+    implements KitIntegration.ActivityListener,
+               AcceleratorClient.ConnectionCallbacks,
                AcceleratorClient.OnConnectionFailedListener,
                AcceleratorClient.OnRegisterForCampaignMonitoringResultListener,
                AcceleratorClient.OnStartCampaignMonitoringResultListener,
@@ -21,6 +26,7 @@ public class SkyhookKit
     private static final String API_KEY = "apiKey";
 
     private AcceleratorClient _client;
+    private boolean _isInitialized;
 
     @Override
     public String getName() {
@@ -29,9 +35,9 @@ public class SkyhookKit
 
     @Override
     protected List<ReportingMessage> onKitCreate(Map<String, String> settings, Context context) {
-        _client = new AcceleratorClient(context, getSettings().get(API_KEY), this, this);
-        _client.connect();
+        _client = new AcceleratorClient(context, settings.get(API_KEY), this, this);
         SkyhookLog.i("Accelerator SDK v" + _client.getVersion());
+        initialize();
         return null;
     }
 
@@ -93,10 +99,67 @@ public class SkyhookKit
         }
     }
 
+    @Override
+    public List<ReportingMessage> onActivityCreated(final Activity activity, final Bundle bundle) {
+        return null;
+    }
+
+    @Override
+    public List<ReportingMessage> onActivityStarted(final Activity activity) {
+        return null;
+    }
+
+    @Override
+    public List<ReportingMessage> onActivityResumed(final Activity activity) {
+        // Attempt a delayed initialization for the case when the
+        // location permission has been granted by the user
+        // for the first time (where the activity would naturally
+        // resume after displaying the permission dialog box),
+        // or revoked and then granted back again later
+        // (where the app would be started from scratch and eventually
+        // call activity's onResume).
+        initialize();
+        return null;
+    }
+
+    @Override
+    public List<ReportingMessage> onActivityPaused(final Activity activity) {
+        return null;
+    }
+
+    @Override
+    public List<ReportingMessage> onActivityStopped(final Activity activity) {
+        return null;
+    }
+
+    @Override
+    public List<ReportingMessage> onActivitySaveInstanceState(final Activity activity, final Bundle bundle) {
+        return null;
+    }
+
+    @Override
+    public List<ReportingMessage> onActivityDestroyed(final Activity activity) {
+        return null;
+    }
+
     private static PendingIntent getServiceIntent(Context context) {
         return PendingIntent.getService(context,
                                         0,
                                         new Intent(context, SkyhookIntentService.class),
                                         PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void initialize() {
+        if (_isInitialized) {
+            return;
+        }
+
+        if (MPUtility.checkPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+            SkyhookLog.i("location permission granted");
+            _client.connect();
+            _isInitialized = true;
+        } else {
+            SkyhookLog.i("location permission is not granted yet");
+        }
     }
 }
