@@ -7,8 +7,8 @@ import com.skyhookwireless.accelerator.AcceleratorClient;
 import com.skyhookwireless.accelerator.CampaignVenue;
 
 public class SkyhookIntentService
-    extends IntentService
-{
+    extends IntentService {
+
     public SkyhookIntentService() {
         super("com.mparticle.kits.SkyhookIntentService");
     }
