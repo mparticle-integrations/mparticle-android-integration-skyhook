@@ -27,6 +27,8 @@ public class SkyhookIntentService
                 default:
                     SkyhookLog.e("unknown trigger type: " + campaignVenue);
             }
+        } else if (AcceleratorClient.hasError(intent)) {
+            SkyhookLog.e("error code: " + AcceleratorClient.getErrorCode(intent));
         } else {
             SkyhookLog.e("unknown intent type: " + intent);
         }
