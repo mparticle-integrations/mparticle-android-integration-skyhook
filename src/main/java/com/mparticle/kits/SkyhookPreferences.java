@@ -23,4 +23,8 @@ class SkyhookPreferences {
     void setApiKey(final String apiKey) {
         _prefs.edit().putString(PREFERENCE_API_KEY, apiKey).apply();
     }
+
+    void clearApiKey() {
+        _prefs.edit().remove(PREFERENCE_API_KEY).apply();
+    }
 }
