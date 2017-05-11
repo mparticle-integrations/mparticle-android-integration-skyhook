@@ -50,6 +50,9 @@ public class SkyhookKit
     protected void onKitDestroy() {
         _client.stopMonitoringForAllCampaigns(this);
         _client.disconnect();
+
+        new SkyhookPreferences(getContext()).clearApiKey();
+
         SkyhookLog.d("destroyed");
     }
 
