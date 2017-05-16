@@ -28,6 +28,8 @@ public class SkyhookKit
 
     private AcceleratorClient _client;
     private boolean _isInitialized;
+    private boolean _isRestarting;
+    private SkyhookPreferences _preferences;
 
     @Override
     public String getName() {
@@ -37,8 +39,12 @@ public class SkyhookKit
     @Override
     protected List<ReportingMessage> onKitCreate(final Map<String, String> settings,
                                                  final Context context) {
+        SkyhookLog.d("onKitCreate");
+
         final String apiKey = settings.get(API_KEY);
-        new SkyhookPreferences(context).setApiKey(apiKey);
+
+        _preferences = new SkyhookPreferences(context);
+        _preferences.setApiKey(apiKey);
 
         _client = new AcceleratorClient(context, apiKey, this, this);
         SkyhookLog.i("Accelerator SDK v" + _client.getVersion());
@@ -48,12 +54,27 @@ public class SkyhookKit
 
     @Override
     protected void onKitDestroy() {
-        _client.stopMonitoringForAllCampaigns(this);
-        _client.disconnect();
-
-        new SkyhookPreferences(getContext()).clearApiKey();
-
+        SkyhookLog.d("onKitDestroy");
+        _isRestarting = false;
+        shutdown();
+        _preferences.clearApiKey();
         SkyhookLog.d("destroyed");
+    }
+
+    @Override
+    public void onSettingsUpdated(final Map<String, String> settings) {
+        SkyhookLog.d("onSettingsUpdated");
+
+        final String newApiKey = settings.get(API_KEY);
+        final String oldApiKey = _preferences.getApiKey();
+        if (oldApiKey.equals(newApiKey)) {
+            SkyhookLog.i("the key hasn't changed");
+        } else {
+            SkyhookLog.i("restarting to apply a new key");
+            _preferences.setApiKey(newApiKey);
+            _isRestarting = true;
+            shutdown();
+        }
     }
 
     @Override
@@ -104,6 +125,12 @@ public class SkyhookKit
             SkyhookLog.i("monitoring stopped");
         } else {
             SkyhookLog.e("failed to stop monitoring: " + statusCode);
+        }
+
+        if (_isRestarting) {
+            _isRestarting = false;
+            _client = new AcceleratorClient(getContext(), _preferences.getApiKey(), this, this);
+            _client.connect();
         }
     }
 
@@ -169,5 +196,10 @@ public class SkyhookKit
         } else {
             SkyhookLog.i("location permission is not granted yet");
         }
+    }
+
+    private void shutdown() {
+        _client.stopMonitoringForAllCampaigns(this);
+        _client.disconnect();
     }
 }
