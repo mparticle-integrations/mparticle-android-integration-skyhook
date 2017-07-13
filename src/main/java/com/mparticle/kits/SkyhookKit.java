@@ -28,6 +28,7 @@ public class SkyhookKit
 
     private AcceleratorClient _client;
     private boolean _isInitialized;
+    private boolean _isRegistered;
     private boolean _isRestarting;
     private SkyhookPreferences _preferences;
 
@@ -102,6 +103,7 @@ public class SkyhookKit
     public void onRegisterForCampaignMonitoringResult(final int statusCode,
                                                       final PendingIntent pendingIntent) {
         if (statusCode == AcceleratorStatusCodes.SUCCESS) {
+            _isRegistered = true;
             _client.startMonitoringForAllCampaigns(this);
         } else {
             SkyhookLog.e("failed to register: " + statusCode);
@@ -185,7 +187,7 @@ public class SkyhookKit
     }
 
     private void initialize() {
-        if (_isInitialized) {
+        if (_client == null || _isInitialized) {
             return;
         }
 
@@ -199,7 +201,14 @@ public class SkyhookKit
     }
 
     private void shutdown() {
-        _client.stopMonitoringForAllCampaigns(this);
+        if (_client == null || ! _client.isConnected()) {
+            return;
+        }
+
+        if (_isRegistered) {
+            _client.stopMonitoringForAllCampaigns(this);
+        }
+
         _client.disconnect();
     }
 }
