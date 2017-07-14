@@ -29,7 +29,6 @@ public class SkyhookKit
     private AcceleratorClient _client;
     private boolean _isInitialized;
     private boolean _isRegistered;
-    private boolean _isRestarting;
     private SkyhookPreferences _preferences;
 
     @Override
@@ -56,7 +55,6 @@ public class SkyhookKit
     @Override
     protected void onKitDestroy() {
         SkyhookLog.d("onKitDestroy");
-        _isRestarting = false;
         shutdown();
         _preferences.clearApiKey();
         SkyhookLog.d("destroyed");
@@ -68,13 +66,14 @@ public class SkyhookKit
 
         final String newApiKey = settings.get(API_KEY);
         final String oldApiKey = _preferences.getApiKey();
-        if (oldApiKey.equals(newApiKey)) {
+        if (oldApiKey == null) {
+            SkyhookLog.i("not running");
+        } else if (oldApiKey.equals(newApiKey)) {
             SkyhookLog.i("the key hasn't changed");
         } else {
-            SkyhookLog.i("restarting to apply a new key");
-            _preferences.setApiKey(newApiKey);
-            _isRestarting = true;
+            SkyhookLog.i("shutting down because the key has changed");
             shutdown();
+            _preferences.clearApiKey();
         }
     }
 
@@ -127,12 +126,6 @@ public class SkyhookKit
             SkyhookLog.i("monitoring stopped");
         } else {
             SkyhookLog.e("failed to stop monitoring: " + statusCode);
-        }
-
-        if (_isRestarting) {
-            _isRestarting = false;
-            _client = new AcceleratorClient(getContext(), _preferences.getApiKey(), this, this);
-            _client.connect();
         }
     }
 
