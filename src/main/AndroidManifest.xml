@@ -13,6 +13,9 @@
         <service
             android:name="com.skyhookwireless.accelerator.AcceleratorService"
             android:exported="false"/>
+        <service android:name="com.skyhookwireless.spi.network.NetworkJobService"
+                 android:permission="android.permission.BIND_JOB_SERVICE"
+                 android:exported="false"/>
         <service
             android:name="com.mparticle.kits.SkyhookIntentService"
             android:exported="false"/>
