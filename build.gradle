@@ -11,8 +11,8 @@ buildscript {
 apply plugin: 'com.mparticle.kit'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.google.guava:guava:20.0'
-    compile 'commons-codec:commons-codec:1.3'
+    implementation 'com.google.guava:guava:20.0'
+    implementation 'commons-codec:commons-codec:1.3'
 }
