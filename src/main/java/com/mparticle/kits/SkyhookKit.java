@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.mparticle.internal.MPUtility;
+import com.mparticle.kits_core.KitIntegration;
+import com.mparticle.kits_core.ReportingMessage;
 import com.skyhookwireless.accelerator.AcceleratorClient;
 import com.skyhookwireless.accelerator.AcceleratorStatusCodes;
 
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SkyhookKit
-    extends KitIntegration
+    extends AbstractKitIntegration
     implements KitIntegration.ActivityListener,
                AcceleratorClient.ConnectionCallbacks,
                AcceleratorClient.OnConnectionFailedListener,
@@ -37,7 +39,7 @@ public class SkyhookKit
     }
 
     @Override
-    protected List<ReportingMessage> onKitCreate(final Map<String, String> settings,
+    public List<ReportingMessage> onKitCreate(final Map<String, String> settings,
                                                  final Context context) {
         SkyhookLog.d("onKitCreate");
 
@@ -53,7 +55,7 @@ public class SkyhookKit
     }
 
     @Override
-    protected void onKitDestroy() {
+    public void onKitDestroy() {
         SkyhookLog.d("onKitDestroy");
         shutdown();
         _preferences.clearApiKey();
