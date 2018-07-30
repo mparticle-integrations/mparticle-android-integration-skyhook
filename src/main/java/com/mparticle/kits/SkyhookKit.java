@@ -9,8 +9,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.mparticle.internal.MPUtility;
-import com.mparticle.kits_core.KitIntegration;
-import com.mparticle.kits_core.ReportingMessage;
+import com.mparticle.kits.core.KitIntegration;
+import com.mparticle.kits.core.ReportingMessage;
 import com.skyhookwireless.accelerator.AcceleratorClient;
 import com.skyhookwireless.accelerator.AcceleratorStatusCodes;
 
