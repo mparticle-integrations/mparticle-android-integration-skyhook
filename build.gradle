@@ -18,6 +18,6 @@ apply plugin: 'com.mparticle.kit'
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.google.guava:guava:20.0'
+    implementation 'com.google.guava:guava:23.0'
     implementation 'commons-codec:commons-codec:1.13'
 }
