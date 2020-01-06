@@ -19,5 +19,5 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.google.guava:guava:23.0'
-    implementation 'commons-codec:commons-codec:1.13'
+    implementation 'commons-codec:commons-codec:1.14'
 }
