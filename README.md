@@ -22,7 +22,7 @@ Note that starting with Android 6.0 (API level 23) the location permission has t
 
 ### Documentation
 
-Check out our [SDK Documentation](http://docs.mparticle.com/#mobile-sdk-guide) site to learn more.
+See the [Skyhook integration documentation](https://docs.mparticle.com/integrations/skyhook/event/) to learn more.
 
 ### License
 
