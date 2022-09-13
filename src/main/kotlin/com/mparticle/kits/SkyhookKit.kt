@@ -110,7 +110,7 @@ class SkyhookKit : KitIntegration(), ActivityListener, ConnectionCallbacks,
         }
     }
 
-    override fun onActivityCreated(activity: Activity, bundle: Bundle): List<ReportingMessage> =
+    override fun onActivityCreated(activity: Activity, bundle: Bundle?): List<ReportingMessage> =
         emptyList()
 
     override fun onActivityStarted(activity: Activity): List<ReportingMessage> = emptyList()
@@ -133,7 +133,7 @@ class SkyhookKit : KitIntegration(), ActivityListener, ConnectionCallbacks,
 
     override fun onActivitySaveInstanceState(
         activity: Activity,
-        bundle: Bundle
+        bundle: Bundle?
     ): List<ReportingMessage> = emptyList()
 
     override fun onActivityDestroyed(activity: Activity): List<ReportingMessage> = emptyList()
