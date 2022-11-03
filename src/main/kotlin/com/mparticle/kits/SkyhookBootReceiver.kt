@@ -19,8 +19,23 @@ class SkyhookBootReceiver : BroadcastReceiver(), ConnectionCallbacks, OnConnecti
             return
         }
         val serviceIntent = Intent(context, SkyhookIntentService::class.java)
-        val pendingIntent =
-            PendingIntent.getService(context, 0, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent: PendingIntent
+        pendingIntent =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                PendingIntent.getService(
+                    context,
+                    0,
+                    serviceIntent,
+                    PendingIntent.FLAG_MUTABLE
+                )
+            } else {
+                PendingIntent.getService(
+                    context,
+                    0,
+                    serviceIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
         i("resuming monitoring after reboot")
         val accelerator = AcceleratorClient(context, apiKey, this, this)
         accelerator.registerForCampaignMonitoring(pendingIntent, this)
