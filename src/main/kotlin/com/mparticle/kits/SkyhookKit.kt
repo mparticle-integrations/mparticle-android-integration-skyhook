@@ -179,12 +179,26 @@ class SkyhookKit : KitIntegration(), ActivityListener, ConnectionCallbacks,
         private const val LOCATION_PERMISSION_NOT_GRANTED_MESSAGE = "location permission is not granted yet"
 
         private fun getServiceIntent(context: Context): PendingIntent {
-            return PendingIntent.getService(
-                context,
-                0,
-                Intent(context, SkyhookIntentService::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
+            val serviceIntent = Intent(context, SkyhookIntentService::class.java)
+            val pendingIntent: PendingIntent
+            pendingIntent =
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    PendingIntent.getService(
+                        context,
+                        0,
+                        serviceIntent,
+                        PendingIntent.FLAG_MUTABLE
+                    )
+                } else {
+                    PendingIntent.getService(
+                        context,
+                        0,
+                        serviceIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+                }
+
+            return pendingIntent
         }
     }
 }
