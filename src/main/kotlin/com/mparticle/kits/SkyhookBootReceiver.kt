@@ -36,8 +36,6 @@ class SkyhookBootReceiver : BroadcastReceiver(), ConnectionCallbacks, OnConnecti
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
             }
-
-        return pendingIntent
         i("resuming monitoring after reboot")
         val accelerator = AcceleratorClient(context, apiKey, this, this)
         accelerator.registerForCampaignMonitoring(pendingIntent, this)

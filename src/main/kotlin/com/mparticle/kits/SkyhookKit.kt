@@ -197,7 +197,6 @@ class SkyhookKit : KitIntegration(), ActivityListener, ConnectionCallbacks,
                         PendingIntent.FLAG_UPDATE_CURRENT
                     )
                 }
-
             return pendingIntent
         }
     }
