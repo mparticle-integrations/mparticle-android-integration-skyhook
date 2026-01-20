@@ -8,7 +8,7 @@ import org.mockito.Mockito
 
 class SkyhookKitTests {
     private val kit: KitIntegration
-         get() = SkyhookKit()
+        get() = SkyhookKit()
 
     @Test
     @Throws(Exception::class)

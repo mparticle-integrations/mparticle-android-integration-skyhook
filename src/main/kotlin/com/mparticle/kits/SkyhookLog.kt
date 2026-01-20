@@ -5,6 +5,7 @@ import com.mparticle.MParticle
 
 internal object SkyhookLog {
     private const val TAG = "mParticle Skyhook Kit"
+
     fun d(msg: String) {
         if (isEnabled) {
             Log.d(TAG, msg)
@@ -26,5 +27,5 @@ internal object SkyhookLog {
     }
 
     private val isEnabled: Boolean
-         get() = MParticle.getInstance()!!.environment == MParticle.Environment.Development
+        get() = MParticle.getInstance()!!.environment == MParticle.Environment.Development
 }
