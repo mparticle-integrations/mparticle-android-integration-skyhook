@@ -7,12 +7,20 @@ import android.content.Intent
 import com.mparticle.kits.SkyhookLog.e
 import com.mparticle.kits.SkyhookLog.i
 import com.skyhookwireless.accelerator.AcceleratorClient
-import com.skyhookwireless.accelerator.AcceleratorClient.*
+import com.skyhookwireless.accelerator.AcceleratorClient.ConnectionCallbacks
+import com.skyhookwireless.accelerator.AcceleratorClient.OnConnectionFailedListener
+import com.skyhookwireless.accelerator.AcceleratorClient.OnRegisterForCampaignMonitoringResultListener
 import com.skyhookwireless.accelerator.AcceleratorStatusCodes
 
-class SkyhookBootReceiver : BroadcastReceiver(), ConnectionCallbacks, OnConnectionFailedListener,
+class SkyhookBootReceiver :
+    BroadcastReceiver(),
+    ConnectionCallbacks,
+    OnConnectionFailedListener,
     OnRegisterForCampaignMonitoringResultListener {
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         val apiKey = SkyhookPreferences(context).apiKey
         if (apiKey == null || apiKey == "") {
             e("not resuming monitoring after reboot")
@@ -26,14 +34,14 @@ class SkyhookBootReceiver : BroadcastReceiver(), ConnectionCallbacks, OnConnecti
                     context,
                     0,
                     serviceIntent,
-                    PendingIntent.FLAG_MUTABLE
+                    PendingIntent.FLAG_MUTABLE,
                 )
             } else {
                 PendingIntent.getService(
                     context,
                     0,
                     serviceIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_UPDATE_CURRENT,
                 )
             }
         i("resuming monitoring after reboot")
@@ -42,11 +50,14 @@ class SkyhookBootReceiver : BroadcastReceiver(), ConnectionCallbacks, OnConnecti
     }
 
     override fun onConnected() {}
+
     override fun onDisconnected() {}
+
     override fun onConnectionFailed(errorCode: Int) {}
+
     override fun onRegisterForCampaignMonitoringResult(
         statusCode: Int,
-        pendingIntent: PendingIntent
+        pendingIntent: PendingIntent,
     ) {
         if (statusCode == AcceleratorStatusCodes.SUCCESS) {
             i("resumed monitoring after reboot")
